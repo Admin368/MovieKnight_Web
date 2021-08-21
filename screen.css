@@ -1,0 +1,21 @@
+#box {
+    background-color: aqua;
+}
+
+.bg {
+    background-color: aquamarine;
+}
+
+.images {
+    /* @include bg; */
+    /* @extend .bg; */
+    /* height: 500px; */
+    border: 1px solid grey;
+    background-size: auto;
+    background-repeat: no-repeat;
+    /* object-fit: cover; */
+}
+
+body {
+    /* background-color: rgb(88, 87, 87); */
+}
