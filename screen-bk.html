@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIZO</title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script> -->
+
+
+    <link type="text/css" rel="stylesheet" href="screen.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <script src="screen.js"></script>
+</head>
+
+<body>
+    <div id="Wrapper " class="container justify-content-center">
+        <div class="container">
+            <h1 class="display-1 text-center p-3">MOVIE KNIGHT</h1>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control p-2" placeholder="search" />
+                <button class="btn btn-outline-secondary " type="button " id="button-addon2 ">Search</button>
+            </div>
+        </div>
+        <div id="container1" class="row ">
+            <video id="player" class="col" width="100%" src=""></video>
+            <button id="button" class="btn col btn-secondary active" disabled>MOVIE STARTS AT</button>
+        </div>
+    </div>
+</body>
+<script>
+    var startTime = new Date("2021-08-20T02:00:00.000") / 1000;
+    var currentTime;
+    var seekTime;
+    var source1 = "video.mp4";
+    var source2 = "https://bj29.cn-beijing.data.alicloudccp.com/dJbZFwxQ%2F71764341%2F61140037513fe1c25e47489a979f914694996bd0%2F611400378e381f310d2c4f81a695e58dd56c95fb?di=bj29&dr=71764341&f=61140037513fe1c25e47489a979f914694996bd0&response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27%25E5%2581%2587%25E5%25A6%2582S01E01.mp4&u=589729afd18743ceaab1c855ed9e9d9c&x-oss-access-key-id=LTAIsE5mAn2F493Q&x-oss-expires=1629401560&x-oss-signature=%2FwNj9vJ56rFphnm8G9Vet9yykrvDDG9oBIPQoiO%2B9Lk%3D&x-oss-signature-version=OSS2";
+    var source3 = "https://u-byte.cn/videos/Movies/titans.mp4";
+    var source = source1;
+    var player = document.getElementById("player");
+
+    $(document).ready(function() {
+        // checkIfTime();
+        changeButton();
+        sync();
+        loadSource(source3);
+    });
+
+    $('#button').click(function() {
+        sync();
+    });
+
+    function updateCurrentTime() {
+        currentTime = new Date().getTime() / 1000;
+        console.log("currentTime : " + currentTime);
+    }
+
+    function sync() {
+        updateCurrentTime();
+        seekTime = currentTime - startTime;
+        console.log(seekTime);
+        if (seekTime > 0) {
+            console.log("start Movie at:" + seekTime);
+            player.currentTime = seekTime;
+            player.play();
+        }
+    }
+
+    function loadSource(sourceUrl) {
+        $('#player').attr('src', sourceUrl);
+
+    }
+
+    function checkIfTime() {
+        updateCurrentTime();
+        seekTime = currentTime - startTime;
+        console.log(seekTime);
+        if (seekTime > 0) {
+            // changeButton();
+        }
+    }
+
+    function changeButton() {
+        $('#button').text('Sync');
+        $('#button').removeAttr('disabled');
+        $('#button').removeClass('btn-sec');
+        $('#button').addClass('btn-primary');
+
+    }
+
+    function alert3pm() {
+        // alert("It's 3PM!");
+    }
+    var timeAt3pm = new Date("8/19/2021 22:01:00 PM").getTime(),
+        timeNow = new Date().getTime(),
+        offsetMillis = timeAt3pm - timeNow;
+    setTimeout(alert3pm, offsetMillis);
+</script>
+
+</html>
