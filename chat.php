@@ -22,10 +22,4 @@ if (isset($_POST["name"]) && isset($_POST["msg"]) && isset($_POST["movie_id"])) 
     $listArray = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     echo json_encode($listArray);
-} else {
-    // $stmt = $db->prepare("select * from messages ");
-    // $stmt->execute(array($id, $movie_id));
-    // $listArray = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    // echo json_encode($listArray);
-}
+} 
