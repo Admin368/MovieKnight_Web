@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIE KNIGHT</title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        #box {
+            background-color: aqua;
+        }
+        
+        .bg {
+            background-color: aquamarine;
+        }
+        
+        .images {
+            border: 1px solid grey;
+            background-size: auto;
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="Wrapper " class="container justify-content-center">
+        <div class="container">
+            <h1 class="display-1 text-center pt-3">MOVIE KNIGHT</h1>
+            <p id="movietitle" class="display-5 text-center w-100 p-0 m-0">Snake Eyes 2021</p>
+            <div class="input-group mb-3">
+            </div>
+        </div>
+        <div id="container1" class="d-flex flex-column">
+            <div class="d-flex flex-row justify-content-center m-0 p-0">
+                <p class="m-0">Status: </p>
+                <p id="statusBar" class="m-0"></p>
+            </div>
+            <div class="justify-content-center p-0 m-0">
+                <video id="player" class="col" width="100%" src="" poster="https://u-byte.cn/wp-content/uploads/2021/08/MovieKnightBg.png"></video>
+                <button id="button" class="btn w-100 col btn-secondary disabled">WAITING</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+<script>
+    var startTimeStr = "2021-08-24T02:46:00";
+    var startTimeObj = new Date(startTimeStr);
+    var startTime = startTimeObj / 1000;
+    var currentTime;
+    var currentLocalTime = "";
+    var currentGlobalTime = "";
+    var currentGlobalTimeFull = "";
+    var seekTime;
+    var isCounterEnabled = true;
+    var movieTitle = "Snake Eyes 2021";
+    var source1 = "video.mp4";
+    var source2 = "https://bj29.cn-beijing.data.alicloudccp.com/dJbZFwxQ%2F71764341%2F61140037513fe1c25e47489a979f914694996bd0%2F611400378e381f310d2c4f81a695e58dd56c95fb?di=bj29&dr=71764341&f=61140037513fe1c25e47489a979f914694996bd0&response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27%25E5%2581%2587%25E5%25A6%2582S01E01.mp4&u=589729afd18743ceaab1c855ed9e9d9c&x-oss-access-key-id=LTAIsE5mAn2F493Q&x-oss-expires=1629401560&x-oss-signature=%2FwNj9vJ56rFphnm8G9Vet9yykrvDDG9oBIPQoiO%2B9Lk%3D&x-oss-signature-version=OSS2";
+    var source3 = "https://u-byte.cn/videos/Movies/titans.mp4";
+    var source4 = "https://u-byte.cn/videos/Movies/SnakeEyes.mp4";
+    var source5 = "https://u-byte.cn/videos/Movies/SnakeEyes2.mp4";
+    var source6 = "https://u-byte.cn/videos/Movies/greenKnight.mp4";
+    var source = source1;
+    var player = document.getElementById("player");
+    $(document).ready(function() {
+        document.oncontextmenu = document.body.oncontextmenu = function() {
+            return false;
+        }
+        setMovieTitle();
+        getGlobalTime();
+        loadSource(source5);
+    });
+    $(player).on("waiting", function() {
+        status("Loading");
+    });
+    $(player).on("playing", function() {
+        status("Playing");
+    });
+    $(player).on("loadedmetadata", function() {
+        sync();
+    })
+    $('#player').click(function() {
+        player.pause();
+        status("You Paused, Sync to Play");
+    });
+    $('#button').click(function() {
+        // sync();
+        sync();
+    });
+
+
+    function setMovieTitle() {
+        $('#movietitle').text(movieTitle);
+    }
+
+    function sync() {
+        updateCurrentTime();
+        seekTime = currentTime - startTime;
+        // BEFORE MOVIE TIME
+        if (seekTime < 0) {
+            status("Wating for Time " + startTimeStr.substr(0, 10) + " " + startTimeStr.substr(11, 5));
+        }
+        // AFTER MOVIE IS FINISHED 
+        else if (seekTime > player.duration) {
+            isCounterEnabled = false;
+            status("You are Late the Movie is Finished");
+            changeButton("NO MOVIE AT THIS TIME")
+        }
+        // ITS TIME PLAY
+        else if ((seekTime > 0) && (seekTime < player.duration)) {
+            isCounterEnabled = false;
+            status("Click Sync to Play");
+            player.currentTime = seekTime;
+            changeButton("SYNC");
+            player.play();
+        }
+    }
+
+    function status(info) {
+        $("#statusBar").text(info);
+    }
+
+
+    function updateCurrentTime() {
+        getGlobalTime();
+        currentTime = currentGlobalTime;
+        currentTime = new Date().getTime() / 1000;
+        console.log("currentTime : " + currentTime);
+        console.log("startTime   : " + startTime);
+    }
+
+    function loadSource(sourceUrl) {
+        $('#player').attr('src', sourceUrl);
+    }
+
+    function changeButton(text) {
+        $('#button').text(text);
+        switch (text) {
+            case "SYNC":
+                $('#button').removeClass('disabled');
+                $('#button').removeClass('btn-sec');
+                $('#button').addClass('btn-dark');
+                break;
+            default:
+
+        }
+    }
+    async function getGlobalTime() {
+        return await $.get('http://worldtimeapi.org/api/timezone/Asia/Shanghai', function(data) {
+            if (data != null) {
+                console.log("RECIVED GLOBAL TIME");
+                console.log(data);
+                currentGlobalTimeFull = data;
+                currentGlobalTime = currentGlobalTimeFull.datetime.substring(0, 22);
+                return data;
+
+            } else {
+                console.log("get() => FAILED TO GLOBAL TIME RECIEVE ")
+
+            }
+        });
+    }
+
+    var countDownDate = new Date(startTimeStr).getTime();
+
+    // Update the count down every 1 second
+    var countdownfunction = setInterval(function() {
+        if (isCounterEnabled == true) {
+            // Get todays date and time
+            var now = new Date().getTime();
+
+            // Find the distance between now an the count down date
+            var distance = countDownDate - now;
+
+            // Time calculations for days, hours, minutes and seconds
+            var days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            // Output the result in an element with id="demo"
+            document.getElementById("button").innerHTML = "Movie Starts in " + (days < 10 ? ("0" + days) : days) + ":" + (hours < 10 ? ("0" + hours) : hours) + ":" +
+                (minutes < 10 ? ("0" + minutes) : minutes) + ":" + (seconds < 10 ? ("0" + seconds) : seconds); + "";
+
+            // If the count down is over, write some text 
+            if (distance < 0) {
+                clearInterval(countdownfunction);
+                isCounterEnabled = false;
+                changeButton("SYNC");
+                sync();
+            }
+        }
+    }, 1000);
+</script>
+
+</html>
