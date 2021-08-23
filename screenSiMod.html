@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MOVIZO</title>
+
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+    <style>
+        #box {
+            background-color: aqua;
+        }
+        
+        .bg {
+            background-color: aquamarine;
+        }
+        
+        .images {
+            border: 1px solid grey;
+            background-size: auto;
+            background-repeat: no-repeat;
+        }
+        
+        #open-chat {
+            position: fixed;
+            bottom: 0;
+            right: 10px;
+            z-index: 99999;
+        }
+        
+        .floating-msg {
+            position: fixed;
+            width: fit-content;
+            background-color: #f8f9fa99;
+            right: 0;
+            padding-top: 20px;
+            /* z-index: 0; */
+            /* top: 0px; */
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id="Wrapper " class="container justify-content-center">
+        <div class="container">
+            <h1 class="display-1 text-center pt-3">MOVIE KNIGHT</h1>
+            <p id="MovieTitle" class="display-5 text-center"></p>
+            <div class="input-group mb-3">
+            </div>
+        </div>
+        <div id="container1" class="row">
+            <div class="d-flex flex-row center">
+                <p class="">Status: </p>
+                <p id="statusBar" class=""></p>
+            </div>
+            <video id="player" class="col" width="100%" src="" poster="https://u-byte.cn/wp-content/uploads/2021/08/MovieKnightBg.png"></video>
+            <button id="button" class="btn col btn-secondary active">SNYC</button>
+        </div>
+    </div>
+    <div class="mb-4 mr-4 border" id="open-chat">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="float-right">
+                        <div class="p-2">
+                            <span class="bg-light">Chating as:</span><input id="chating-as" type="text" value="John Doe">
+                        </div>
+                        <div class="p-2">
+                            <input class="" id="message-input" placeholder="type message here" type="text">
+                            <button id="send-msg" onclick="sendMsg()"> Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<script>
+    //var url = "https://u-byte.cn/chat.php";
+    var url = "https://movieknight.u-byte.cn/chat.php";
+    var lastFetch = 0;
+
+    function sendMsg() {
+
+        var name = $("#chating-as").val();
+        var msg = $("#message-input").val();
+
+        console.log(name, msg);
+
+        name = name.trim();
+        msg = msg.trim();
+
+        if (name.length == 0 || msg.length == 0) {
+            alert("name or message can't be empty");
+        } else {
+            $("#message-input").val("");
+            $.ajax({
+                type: "POST",
+                url: url,
+                data: {
+                    name: name,
+                    msg: msg,
+                    movie_id: "1"
+                },
+            });
+        }
+
+    }
+
+    var messageData = [];
+    var movieChat = function() {
+        var msg = "";
+        if (messageData.length === 0) {
+
+            msg = {
+                "id": Date.now(),
+                "user": "movizo",
+                "message": "no new message"
+            };
+
+        } else {
+            msg = messageData.shift();
+        }
+
+        $("#player").before("<div id='" + msg.id +
+            "' class='floating-msg' >" + msg.user + " says: " + msg
+            .message + "</div>");
+        var w = $("#" + msg.id).width();
+        $("#" + msg.id).css("right", "-" + w + "px");
+        $("#" + msg.id).animate({
+            right: "+=" + (window.innerWidth + w) + "px"
+        }, 10000, "linear", function() {
+            // $("#" + msg.id).remove();
+        });
+
+    };
+
+    var lastFetch = 0;
+
+    (function() {
+        setInterval(function() {
+            $.ajax({
+                type: "GET",
+                url: url,
+                data: {
+                    movie_id: "1",
+                    id: lastFetch
+                },
+                success: function(res) {
+                    console.log(res);
+                    res = JSON.parse(res);
+                    console.log(res, res.length);
+                    if (res.length > 0) {
+                        messageData = messageData.concat(res);
+                        lastFetch = res[res.length - 1].id;
+
+                    }
+                },
+            });
+
+
+        }, 1000);
+
+        setInterval(movieChat, 5000);
+
+    })();
+</script>
+<script>
+    var startTimeStr = "2021-08-24T03:18:00";
+    var startTimeObj = new Date(startTimeStr);
+    var startTime = startTimeObj / 1000;
+    var currentTime;
+    var seekTime;
+    var movieTitle = "Snake Eyes 2021";
+    var source1 = "video.mp4";
+    var source2 =
+        "https://bj29.cn-beijing.data.alicloudccp.com/dJbZFwxQ%2F71764341%2F61140037513fe1c25e47489a979f914694996bd0%2F611400378e381f310d2c4f81a695e58dd56c95fb?di=bj29&dr=71764341&f=61140037513fe1c25e47489a979f914694996bd0&response-content-disposition=attachment%3B%20filename%2A%3DUTF-8%27%27%25E5%2581%2587%25E5%25A6%2582S01E01.mp4&u=589729afd18743ceaab1c855ed9e9d9c&x-oss-access-key-id=LTAIsE5mAn2F493Q&x-oss-expires=1629401560&x-oss-signature=%2FwNj9vJ56rFphnm8G9Vet9yykrvDDG9oBIPQoiO%2B9Lk%3D&x-oss-signature-version=OSS2";
+    var source3 = "https://u-byte.cn/videos/Movies/titans.mp4";
+    var source4 = "https://u-byte.cn/videos/Movies/SnakeEyes.mp4";
+    var source5 = "https://u-byte.cn/videos/Movies/SnakeEyes2.mp4";
+    var source6 = "https://u-byte.cn/videos/Movies/greenKnight.mp4";
+    var source = source1;
+    var player = document.getElementById("player");
+    $(document).ready(function() {
+        document.oncontextmenu = document.body.oncontextmenu = function() {
+            return false;
+        }
+
+        loadSource(source5);
+    });
+    $(player).on("waiting", function() {
+        status("Loading");
+    });
+    $(player).on("playing", function() {
+        // if ($('#statusBar').val() == "Loading") {
+        //     status("Playing");
+        // }
+        status("Playing");
+    });
+    $(player).on("loadedmetadata", function() {
+        // if ($('#statusBar').val() == "Loading") {
+        //     status("Playing");
+        // }
+        // status("Playing");
+        checkStatus();
+    })
+
+    function setMovieTitle() {
+
+
+    }
+
+    function checkStatus() {
+        updateCurrentTime();
+        seekTime = currentTime - startTime;
+        if (seekTime < 0) {
+            status("Wating for Time " + startTimeStr);
+        } else if (seekTime > player.duration) {
+            status("You are Late the Movie is Finished");
+        } else
+        if ((seekTime > 0) && (seekTime < player.duration)) {
+            status("Click Sync to Play");
+            sync();
+        }
+    }
+
+    function status(info) {
+        $("#statusBar").text(info);
+    }
+    $('#player').click(function() {
+        player.pause();
+        status("You Pause, Sync to Play");
+    });
+    //$('#player').dblclick(function() {
+    // player.fullscreen();
+    //player.requestFullscreen()
+    //});
+    $('#button').click(function() {
+        sync();
+    });
+
+    function updateCurrentTime() {
+        currentTime = new Date().getTime() / 1000;
+        console.log("currentTime : " + currentTime);
+        console.log("startTime   : " + startTime);
+    }
+
+    function sync() {
+        updateCurrentTime();
+        seekTime = currentTime - startTime;
+        console.log(seekTime);
+        if (seekTime > 0) {
+            if (seekTime < player.duration && seekTime > 0) {
+                console.log("start Movie at:" + seekTime);
+                player.currentTime = seekTime;
+                player.play();
+            }
+        }
+    }
+
+    function loadSource(sourceUrl) {
+        $('#player').attr('src', sourceUrl);
+    }
+
+    function checkIfTime() {
+        updateCurrentTime();
+        seekTime = currentTime - startTime;
+        console.log(seekTime);
+        if (seekTime > 0) {
+            changeButton();
+        }
+    }
+
+    function changeButton() {
+        $('#button').text('Sync');
+        $('#button').removeAttr('disabled');
+        $('#button').removeClass('btn-sec');
+        $('#button').addClass('btn-primary');
+    }
+
+    function alert3pm() {
+        // alert("It's 3PM!");
+        status("Trigger");
+        // checkStatus();
+        // sync();
+    }
+
+    var timeAt3pm = new Date(startTimeStr).getTime(),
+        timeNow = new Date().getTime(),
+        offsetMillis = timeAt3pm - timeNow;
+    setTimeout(alert3pm, offsetMillis);
+</script>
+
+</html>
