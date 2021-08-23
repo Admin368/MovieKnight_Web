@@ -30,7 +30,7 @@
         #open-chat {
             position: fixed;
             bottom: 0;
-            right: 0;
+            right: 10px;
         }
 
         .floating-msg {
@@ -61,15 +61,20 @@
             <button id="button" class="btn col btn-secondary active">SNYC</button>
         </div>
     </div>
-    <div class="m-4 bg-light" id="open-chat">
-        <div class="d-flex flex-row">
-            <div>
-                Chating as:
-                <input id="chating-as" type="text" value="John Doe">
-            </div>
-            <div class="">
-                <input id="message-input" placeholder="type message here" type="text">
-                <button id="send-msg" onclick="sendMsg()"> Send</button>
+    <div class="mb-4 mr-4 border" id="open-chat">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="float-right" >                       
+                        <div class="p-2">
+                            <span class="bg-light">Chating as:</span><input id="chating-as" type="text" value="John Doe">
+                        </div>
+                        <div class="p-2">
+                            <input class="" id="message-input" placeholder="type message here" type="text">
+                            <button id="send-msg" onclick="sendMsg()"> Send</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -127,7 +132,7 @@
             .message + "</div>");
         $("#" + msg.id).animate({
             right: "+=" + window.innerWidth + "px"
-        }, 10000,"linear", function () {
+        }, 10000, "linear", function () {
             $("#" + msg.id).remove();
         });
 
