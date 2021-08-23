@@ -3,7 +3,6 @@
     // $dbname = 'chat';
     // $dbuser = 'admin';
     // $dbpass = 'Admin1234567890';
-
     $dbhost = 'localhost';
     $dbname = 'movizo';
     $dbuser = 'root';
